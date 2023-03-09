@@ -10,6 +10,11 @@ const asideProductDetail = document.querySelectorAll('.product-detail')[1];
 
 const cardsContainer = document.querySelector(".cards-container");
 
+const carContentContainer = document.querySelector(".orders");
+
+const summarizedOrder = document.querySelector('.order');
+
+const numberOfCartElements = document.getElementById('numberOfCartElements');
 
 menuEmail.addEventListener('click', toggleDesktopMenu);
 hamMenu.addEventListener('click', toggleMobileMenu);
@@ -18,42 +23,90 @@ menuCar.addEventListener('click', toggleCarAside);
 function toggleDesktopMenu() {
     aside.classList.add('inactive');
     asideProductDetail.classList.add('inactive');
-    desktopMenu.classList.toggle('inactive');
+    desktopMenu.classList.remove('inactive');
+    desktopMenu.classList.toggle('hide-desktop-menu');
+    desktopMenu.classList.toggle('show-desktop-menu');
 }
 
 function toggleMobileMenu() {
     aside.classList.add('inactive');
-    mobileMenu.classList.toggle('inactive');
+    mobileMenu.classList.remove('inactive');
+    mobileMenu.classList.toggle('hide-mobile-menu');
+    mobileMenu.classList.toggle('show-mobile-menu');
 }
 
 function toggleCarAside() {
     desktopMenu.classList.add('inactive');
     asideProductDetail.classList.add('inactive');
     mobileMenu.classList.add('inactive');
-    aside.classList.toggle('inactive');
+    aside.classList.remove('inactive');
+    aside.classList.toggle('hide-product-detail');
+    aside.classList.toggle('show-product-detail');
 }
 
 const products = [];
-const productsNodes = [];
 products.push({
     name: "Bike",
     price: 120,
     img: "https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    description: "Esta bicicleta de tamaño medio de color rojo es la ideal para el entusiasta del aire libre. Cuenta con marco de aluminio ligero, cambiadores y desviadores Shimano de 21 velocidades, neumáticos de 26 pulgadas, frenos de V y sistema de suspensión doble. Es el compañero perfecto para un paseo relajante o enfrentar los senderos. Prepárate para rodar con estilo con esta bicicleta confiable y cómoda."
+    description: "Esta bicicleta de tamaño medio de color rojo es la ideal para el entusiasta del aire libre. Cuenta con marco de aluminio ligero, cambiadores y desviadores Shimano de 21 velocidades, neumáticos de 26 pulgadas, frenos de V y sistema de suspensión doble. Es el compañero perfecto para un paseo relajante o enfrentar los senderos. Prepárate para rodar con estilo con esta bicicleta confiable y cómoda.",
+    // inTheCar: false
 });
 products.push({
     name: "PC",
     price: 820,
     img: "https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    description: 'Esta computadora de última generación es una herramienta ideal para quienes buscan el mejor rendimiento. Cuenta con un procesador de alto rendimiento, una tarjeta gráfica de última generación, gran memoria RAM y un almacenamiento rápido. Además, viene con un sistema operativo moderno y la última tecnología en conectividad. Una opción excelente para quienes buscan el mejor rendimiento.'
+    description: 'Esta computadora de última generación es una herramienta ideal para quienes buscan el mejor rendimiento. Cuenta con un procesador de alto rendimiento, una tarjeta gráfica de última generación, gran memoria RAM y un almacenamiento rápido. Además, viene con un sistema operativo moderno y la última tecnología en conectividad. Una opción excelente para quienes buscan el mejor rendimiento.',
+    // inTheCar: false
 });
 products.push({
     name: "Pantalla",
     price: 200,
     img: "https://images.pexels.com/photos/276517/pexels-photo-276517.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-    description: 'Esta pantalla de última generación ofrece una calidad de imagen superior gracias a su resolución 4K, proporcionando una experiencia de visualización nítida y vívida. Sus ángulos de visión amplios permiten disfrutar de contenido desde cualquier ángulo. Además, su diseño delgado y ligero se adapta a cualquier entorno.'
+    description: 'Esta pantalla de última generación ofrece una calidad de imagen superior gracias a su resolución 4K, proporcionando una experiencia de visualización nítida y vívida. Sus ángulos de visión amplios permiten disfrutar de contenido desde cualquier ángulo. Además, su diseño delgado y ligero se adapta a cualquier entorno.',
+    // inTheCar: false
 });
 
+// const carContent = products.filter(el => el.inTheCar === true);
+const carContent = [];
+const carContentNodes = [];
+
+function addToCart(productName){
+    const foundProduct = products.find(el => el.name === productName);
+    // foundProduct.inTheCar = true;
+    carContent.push(foundProduct)
+    renderCarContent(carContent);
+}
+
+function renderCarContent(carElements){
+    let nodes = "";
+    let i = -1;
+    carElements.forEach((carEl) => {
+        const inCarEl = `
+            <div class="shopping-cart">
+                <figure>
+                    <img src="${carEl.img}" alt="${carEl.name}">
+                </figure>
+                <p>${carEl.name}</p>
+                <p>$${carEl.price}</p>
+                <img src="./icons/icon_close.png" alt="close" onclick="quitElement('${++i}CE')">
+            </div>`;
+        nodes += inCarEl;
+    });
+    carContentContainer.innerHTML = nodes;
+    // Render the total of the orders
+    const totalPrice = summarizedOrder.children[1];
+    totalPrice.innerText = `$${carElements.map(el => el.price).reduce((a,b)=>a+b)}`;
+    // render the number of products in the cart
+    numberOfCartElements.innerText = carElements.length;
+
+}
+
+function quitElement(nIndex) {
+    const index = parseInt(nIndex);
+    carContent.splice(index, 1);
+    renderCarContent(carContent);
+}
 
 function showProductDetails(elName) {
     const productName = elName.getAttribute("id");
@@ -71,12 +124,12 @@ function renderProductDetails({
     img,
     description
 }){
-    if (asideProductDetail.classList.contains('inactive')) {
-        asideProductDetail.classList.toggle('inactive');
-    }
+    asideProductDetail.classList.remove('inactive');
+    asideProductDetail.classList.toggle('hide-product-detail');
+    asideProductDetail.classList.toggle('show-product-detail');
     aside.classList.add('inactive');
     desktopMenu.classList.add('inactive');
-
+    // ----------------------------------------------------------------
     const detailName = document.getElementById('productDetailName');
     detailName.innerText = name;
 
@@ -89,7 +142,8 @@ function renderProductDetails({
     const imgProduct = asideProductDetail.children[1];
     imgProduct.setAttribute('src', img);
 
-
+    const buttonAddToCar = asideProductDetail.children[2].children[3];
+    buttonAddToCar.setAttribute('onclick', `addToCart('${name}')`)
 }
 
 
@@ -105,7 +159,7 @@ function renderProducts(productsList) {
                         <p>${product.name}</p>
                     </div>
                     <figure>
-                        <img src="./icons/bt_add_to_cart.svg" alt="">
+                        <img src="./icons/bt_add_to_cart.svg" alt="${product.name}" onclick="addToCart('${product.name}')">
                     </figure>
                 </div>
             </div>`;
@@ -116,3 +170,4 @@ function renderProducts(productsList) {
 
 
 renderProducts(products);
+renderCarContent(carContent);
