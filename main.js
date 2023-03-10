@@ -20,6 +20,8 @@ const summarizedOrder = document.querySelector('.order');
 
 const numberOfCartElements = document.getElementById('numberOfCartElements');
 
+const modalIWP = document.querySelector('.modal-IWP');
+
 menuEmail.addEventListener('click', toggleDesktopMenu);
 hamMenu.addEventListener('click', toggleMobileMenu);
 menuCar.addEventListener('click', toggleCarAside);
@@ -171,6 +173,10 @@ function renderProducts(productsList) {
         nodes += card;
         }
     cardsContainer.innerHTML = nodes;
+}
+
+function closeIWPModal() {
+    modalIWP.classList.toggle('inactive');
 }
 
 
