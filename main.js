@@ -8,6 +8,10 @@ const menuCar = document.querySelector(".navbar-shopping-cart");
 const aside = document.querySelectorAll('.product-detail')[0];
 const asideProductDetail = document.querySelectorAll('.product-detail')[1];
 
+const btnCloseProductDetail = document.querySelector('product-detail-close');
+
+const btnCloseCarMenu = document.querySelector('close-car-menu');
+
 const cardsContainer = document.querySelector(".cards-container");
 
 const carContentContainer = document.querySelector(".orders");
@@ -73,7 +77,6 @@ const carContentNodes = [];
 
 function addToCart(productName){
     const foundProduct = products.find(el => el.name === productName);
-    // foundProduct.inTheCar = true;
     carContent.push(foundProduct)
     renderCarContent(carContent);
 }
@@ -96,7 +99,9 @@ function renderCarContent(carElements){
     carContentContainer.innerHTML = nodes;
     // Render the total of the orders
     const totalPrice = summarizedOrder.children[1];
-    totalPrice.innerText = `$${carElements.map(el => el.price).reduce((a,b)=>a+b)}`;
+    totalPrice.innerText = carElements.length !== 0
+        ? `$${carElements.map(el => el.price).reduce((a,b)=>a+b)}`
+        : 0;
     // render the number of products in the cart
     numberOfCartElements.innerText = carElements.length;
 
@@ -115,7 +120,8 @@ function showProductDetails(elName) {
 }
 
 function closeProductDetails(){
-    asideProductDetail.classList.add('inactive');
+    asideProductDetail.classList.remove('show-product-detail');
+    asideProductDetail.classList.add('hide-product-detail');
 }
 
 function renderProductDetails({
@@ -124,12 +130,11 @@ function renderProductDetails({
     img,
     description
 }){
-    asideProductDetail.classList.remove('inactive');
-    asideProductDetail.classList.toggle('hide-product-detail');
-    asideProductDetail.classList.toggle('show-product-detail');
-    aside.classList.add('inactive');
-    desktopMenu.classList.add('inactive');
-    // ----------------------------------------------------------------
+    if (asideProductDetail.classList.contains('inactive') || asideProductDetail.classList.contains('hide-product-detail')) {
+        asideProductDetail.classList.remove('inactive');
+        asideProductDetail.classList.remove('hide-product-detail');
+        asideProductDetail.classList.add('show-product-detail')
+    } 
     const detailName = document.getElementById('productDetailName');
     detailName.innerText = name;
 
