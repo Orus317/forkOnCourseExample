@@ -484,6 +484,51 @@ nav {
 	cursor: pointer;
 }
 
+.modal-addedProduct{
+	display: flex;
+	justify-content: center;
+	position: fixed;
+	width: 100%;
+	bottom: 0px;
+	z-index: 10;
+}
+
+.modal-addedProduct .addedProduct-message-container{
+	display: flex;
+	align-items: center;
+	height: 52px;
+	font-size: 18px;
+	background-color: var(--text-input-field);
+	box-shadow: 1px 1px 1px 1px var(--hospital-green),
+				-1px -1px 1px 1px var(--hospital-green);
+	border-radius: 15px;
+	padding: 10px;
+	transform: translateY(80px);
+}
+
+.addedProduct-message-container p {
+	margin: 0;
+}
+
+.show-modal-addedProduct{
+	animation: hoist 1500ms ease-in-out forwards;
+}
+
+@keyframes hoist {
+	0%{
+		transform: translateY(0px);
+	}
+	20%{
+		transform: translateY(-100px);
+	}
+	80%{
+		transform: translateY(-100px);
+	}
+	100%{
+		transform: translateY(0);
+	}
+}
+
 @media (max-width: 640px) {
 	.menu {
 	display: block;

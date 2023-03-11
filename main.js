@@ -22,6 +22,8 @@ const numberOfCartElements = document.getElementById('numberOfCartElements');
 
 const modalIWP = document.querySelector('.modal-IWP');
 
+const modalAddedProduct = document.querySelector('.modal-addedProduct');
+
 menuEmail.addEventListener('click', toggleDesktopMenu);
 hamMenu.addEventListener('click', toggleMobileMenu);
 menuCar.addEventListener('click', toggleCarAside);
@@ -81,6 +83,15 @@ function addToCart(productName){
     const foundProduct = products.find(el => el.name === productName);
     carContent.push(foundProduct)
     renderCarContent(carContent);
+    renderModalAddedProduct();
+}
+
+function renderModalAddedProduct() {
+    // modalAddedProduct.classList.remove('inactive')
+    modalAddedProduct.classList.add('show-modal-addedProduct');
+    setTimeout(() => {
+        modalAddedProduct.classList.remove('show-modal-addedProduct');
+    }, 1500);
 }
 
 function renderCarContent(carElements){
